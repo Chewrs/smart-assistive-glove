@@ -1,9 +1,5 @@
-import urequests
-import json
 import network
-
-SSID = "KhunNoo_2.4G"
-PASSWORD = "WJ0906560924"
+import time
 
 def connect_wifi(SSID,PASSWORD):
     """Connects ESP32 to Wi-Fi and retries on failure."""
@@ -29,17 +25,5 @@ def connect_wifi(SSID,PASSWORD):
         print("Wi-Fi Error:", e)
         return None
     
-connect_wifi(SSID = "KhunNoo_2.4G",PASSWORD = "WJ0906560924")
 
 
-url = "http://192.168.1.146:5000/data" 
-
-data = {
-    "sensor": "distance",
-    "value": 14.33
-}
-
-response = urequests.post(url, json=data)
-print(response.text)
-response.close()
-prin

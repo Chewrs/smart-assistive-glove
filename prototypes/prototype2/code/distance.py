@@ -1,5 +1,14 @@
 from machine import Pin, ADC, time_pulse_us
 from time import sleep
+import sent_post
+import wifi_connect
+
+
+
+SSID = "KhunNoo_2.4G"
+PASSWORD = "WJ0906560924"
+
+wifi_connect.connect_wifi(SSID,PASSWORD)
 
 trigger = Pin(5, Pin.OUT)
 echo = Pin(18, Pin.IN)
@@ -27,11 +36,10 @@ while True:
     
     if len(buffer) >= 20:
         try:
-            with open("distance_log.txt", "a") as f:
-                for d in buffer:
-                    f.write("{:.2f}\n".format(d))
-            buffer.clear()
+            sent_post.sent("http://192.168.1.146:5000/data", str(buffer))
             print('writed'*20)
+            buffer = []
         except:
             print("Write failed")
+    
     sleep(0.01)
