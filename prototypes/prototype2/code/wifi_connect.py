@@ -1,29 +1,32 @@
 import network
 import time
 
-def connect_wifi(SSID,PASSWORD):
-    """Connects ESP32 to Wi-Fi and retries on failure."""
-    try:
-        wifi = network.WLAN(network.STA_IF)
-        wifi.active(True)
-        wifi.connect(SSID, PASSWORD)
+class WiFiManager:
+    def __init__(self):
+        self.wifi = network.WLAN(network.STA_IF)
+        self.wifi.active(True)
 
+    def connect(self, ssid, password, max_attempts=20):
         print("Connecting to Wi-Fi...", end="")
+        self.wifi.connect(ssid, password)
+
         attempt = 0
-        while not wifi.isconnected() and attempt < 20:
+        while not self.wifi.isconnected() and attempt < max_attempts:
             time.sleep(1)
             print(".", end="")
             attempt += 1
 
-        if wifi.isconnected():
-            print("\nConnected to:", wifi.ifconfig())
-            return wifi.ifconfig()[0]
+        if self.wifi.isconnected():
+            print("\nConnected to:", self.wifi.ifconfig())
+            return self.wifi.ifconfig()[0]
         else:
             print("\nFailed to connect to Wi-Fi.")
             return None
-    except Exception as e:
-        print("Wi-Fi Error:", e)
-        return None
-    
 
+    def is_connected(self):
+        return self.wifi.isconnected()
 
+    def disconnect(self):
+        if self.wifi.isconnected():
+            self.wifi.disconnect()
+            print("Disconnected from Wi-Fi.")
