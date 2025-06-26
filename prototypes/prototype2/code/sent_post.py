@@ -8,9 +8,8 @@ class HTTPClient:
     def send(self, url, data):
         try:
             response = urequests.post(url, json=data)
-            print(response.text)
+            result = response.text
             response.close()
-            return True
+            return result
         except Exception as e:
-            print("Error sending data:", e)
-            return False
+            return {"error": str(e)}

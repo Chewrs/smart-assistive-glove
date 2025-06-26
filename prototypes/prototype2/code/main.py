@@ -23,29 +23,36 @@ sensor = UltrasonicSensor(trigger_pin=5, echo_pin=18)  # change pins as needed
 
         
 buffer = []
+simple_result = ''
 while True:
     
     dist = sensor.get_distance()
     print(dist)
  
-    screen.show_text(str(dist))
+    screen.show_text(simple_result,0,10)
+    screen.show_text(str(dist),20,33,False)
+
     
     buffer.append(dist)
     
     
-    if len(buffer) >= 20:
+    if len(buffer) >= 5:
         try:
-            screen.show_text('sending')
+            screen.show_text(str(dist),20,33)
+            screen.show_text('sending',0,0,False)
 
-
-            client.send("http://192.168.1.146:5000/data", str(buffer))
-
+            result = client.send("http://192.168.1.146:5000/data", str(buffer))
+            if isinstance(result, dict) and "error" in result:
+                simple_result = 'Fail'
+                print(result)
+            else:
+                simple_result ="Success"
+                print(result)
+            
             print('writed'*20)
-            screen.show_text('sent')
             buffer = []
         except:
-            print("Write failed")
-            screen.show_text('sent fail')
+            simple_result = 'Broken'
     
     
     sleep(0.01)

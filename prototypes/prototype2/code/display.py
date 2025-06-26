@@ -15,8 +15,9 @@ class OLEDDisplay:
         self.oled.fill(0)
         self.oled.show()
 
-    def show_text(self, text, x=0, y=0):
-        self.oled.fill(0)
+    def show_text(self, text, x=0, y=0,clear=True):
+        if clear:
+            self.oled.fill(0)
         self.oled.text(text, x, y)
         self.oled.show()
 
